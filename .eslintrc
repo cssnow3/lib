@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "wesbos"
+  ],
+  "rules": {
+    "no-param-reassign": 0,
+    "prefer-destructuring": 0,
+    "no-constant-condition": 0
+  }
+}
