@@ -17,7 +17,7 @@ while (true) {
   } else if (answer === '2') {
     const unavailable = funcs.loginfunc();
     if (unavailable === false) {
-      funcs.document();
+      funcs.documentfunc();
     }
   } else if (answer === 'q') {
     process.exit(0);

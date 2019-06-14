@@ -298,7 +298,7 @@ function documentList(dir) {
   if (quit === 'q') documentMenu();
 }
 
-const document = () => {
+const documentfunc = () => {
   let goOn = true;
   documentMenu();
   while (goOn === true) {
@@ -341,5 +341,5 @@ module.exports = {
   documentOpen,
   documentDelete,
   documentList,
-  document,
+  documentfunc,
 };
