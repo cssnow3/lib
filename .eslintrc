@@ -5,6 +5,8 @@
   "rules": {
     "no-param-reassign": 0,
     "prefer-destructuring": 0,
-    "no-constant-condition": 0
+    "no-constant-condition": 0,
+    "no-restricted-syntax": 0,
+    "guard-for-in": 0
   }
 }

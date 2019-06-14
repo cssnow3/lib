@@ -6,7 +6,6 @@ const dir = 'DataBase';
 
 if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 fs.appendFileSync(`./${dir}/database.txt`, '');
-// fs.chmodSync('./database.txt',300);
 
 funcs.mainMenu();
 
@@ -14,11 +13,11 @@ while (true) {
   funcs.pos(18, 37);
   const answer = readline.question('');
   if (answer === '1') {
-    funcs.Register();
+    funcs.register();
   } else if (answer === '2') {
-    const flag = funcs.Login();
-    if (flag === false) {
-      funcs.Document();
+    const unavailable = funcs.loginfunc();
+    if (unavailable === false) {
+      funcs.document();
     }
   } else if (answer === 'q') {
     process.exit(0);

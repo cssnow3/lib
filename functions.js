@@ -54,47 +54,52 @@ const documentMenu = (message = '') => {
   pos(22, 1);
   console.log(message);
 
-  pos(1, 35);
-  write('Welcome!!!');
+  const values = [
+    { pos: [1, 35], message: 'Welcome!!!' },
+    { box: [5, 10, 4, 20], pos: [6, 11], message: '1.Create/Edit file' },
+    { box: [5, 30, 4, 20], pos: [6, 31], message: '2.Open file' },
+    { box: [5, 50, 4, 20], pos: [6, 51], message: '3.Delete file' },
+    { box: [8, 50, 4, 20], pos: [9, 51], message: 'l.List' },
+    { box: [11, 50, 4, 20], pos: [12, 51], message: 'q.Quit' },
+  ];
 
-  box(5, 10, 4, 20);
-  pos(6, 11);
-  write('1.Create/Edit file');
-
-  box(5, 30, 4, 20);
-  pos(6, 31);
-  write('2.Open file');
-
-  box(5, 50, 4, 20);
-  pos(6, 51);
-  write('3.Delete file');
-
-  box(8, 50, 4, 20);
-  pos(9, 51);
-  write('l.List');
-
-  box(11, 50, 4, 20);
-  pos(12, 51);
-  write('q.Quit');
+  for (const object of values) {
+    for (const key in object) {
+      const value = object[key];
+      if (key === 'box') {
+        box(...value);
+      } else if (key === 'pos') {
+        pos(...value);
+      } else if (key === 'message') {
+        write(value);
+      }
+    }
+  }
 };
 
 const mainMenu = (message = '') => {
   clear();
-
   pos(22, 1);
   console.log(message);
 
-  box(7, 18, 4, 14);
-  pos(8, 19);
-  write(' 1.Register');
+  const values = [
+    { box: [7, 18, 4, 14], pos: [8, 19], message: '1.Register' },
+    { box: [7, 50, 4, 12], pos: [8, 51], message: '2.Login' },
+    { box: [1, 68, 4, 12], pos: [2, 69], message: 'q.Quit' },
+  ];
 
-  box(7, 50, 4, 12);
-  pos(8, 51);
-  write(' 2.Login');
-
-  box(1, 68, 4, 12);
-  pos(2, 69);
-  write(' q.Quit');
+  for (const object of values) {
+    for (const key in object) {
+      const value = object[key];
+      if (key === 'box') {
+        box(...value);
+      } else if (key === 'pos') {
+        pos(...value);
+      } else if (key === 'message') {
+        write(value);
+      }
+    }
+  }
 };
 
 const updateinterface = (message = '') => {
@@ -107,12 +112,12 @@ const updateinterface = (message = '') => {
   write(' q.Quit');
 };
 
-function RegisterLogin(bool, quitbool, user) {
+function registerLogin(goOn, quitcheck, user) {
   pos(11, 30);
   const login = readline.question('Login: ');
   if (login === 'q') {
-    quitbool = true;
-    bool = false;
+    quitcheck = true;
+    goOn = false;
     mainMenu();
   } else if (login.includes('/') || login[0] === '.') {
     updateinterface('Invalid input');
@@ -120,19 +125,19 @@ function RegisterLogin(bool, quitbool, user) {
     user.login = login;
     let database = fs.readFileSync(`./${gdir}/database.txt`, 'utf8');
     if (database !== '') database = deserialize(database);
-    bool = check(login, database, 'login');
+    goOn = check(login, database, 'login');
     updateinterface('Login unavailable');
   }
-  return { bool, quitbool, login };
+  return { goOn, quitcheck };
 }
 
-function RegisterPassword(bool, quitbool, user) {
+function registerPassword(goOn, quitcheck, user) {
   updateinterface();
   pos(11, 30);
   const password = readline.question('Password: ');
   if (password === 'q') {
-    quitbool = true;
-    bool = false;
+    quitcheck = true;
+    goOn = false;
     mainMenu();
   } else {
     user.password = password;
@@ -141,79 +146,78 @@ function RegisterPassword(bool, quitbool, user) {
     pos(22, 1);
     mainMenu('Account created');
   }
-  return password;
 }
 
-const Register = () => {
-  let bool = true;
-  let quitbool = false;
+const register = () => {
+  let goOn = true;
+  let quitcheck = false;
   const user = {};
   updateinterface();
-  while (bool === true) {
-    const obj = RegisterLogin(bool, quitbool, user);
-    bool = obj.bool;
-    quitbool = obj.quitbool;
+  while (goOn === true) {
+    const obj = registerLogin(goOn, quitcheck, user);
+    goOn = obj.goOn;
+    quitcheck = obj.quitcheck;
   }
-  if (quitbool === false) {
-    RegisterPassword(bool, quitbool, user);
+  if (quitcheck === false) {
+    registerPassword(goOn, quitcheck, user);
   }
 };
 
-function LoginLogin(quitbool, bool) {
+function loginLogin(quitcheck, goOn) {
   pos(11, 30);
   const login = readline.question('Login: ');
   if (login === 'q') {
-    quitbool = true;
-    bool = true;
+    quitcheck = true;
+    goOn = true;
     mainMenu('');
   } else {
     glogin = login;
     let database = fs.readFileSync(`./${gdir}/database.txt`, 'utf8');
     if (database !== '') database = deserialize(database);
-    bool = check(login, database, 'login');
+    goOn = check(login, database, 'login');
     updateinterface('Incorrect login');
   }
-  return { quitbool, bool };
+  return { goOn, quitcheck };
 }
 
-function LoginPassword(quitbool, bool) {
+function loginPassword(quitcheck, goOn) {
   updateinterface();
-  while (bool === false) {
+  while (goOn === false) {
     pos(11, 30);
     const password = readline.question('Password: ');
     if (password === 'q') {
-      quitbool = true;
-      bool = true;
+      quitcheck = true;
+      goOn = true;
       mainMenu();
     } else {
       let database = fs.readFileSync(`./${gdir}/database.txt`, 'utf8');
       if (database !== '') database = deserialize(database);
-      bool = check(password, database, 'password');
+      goOn = check(password, database, 'password');
       updateinterface('Incorrect password');
     }
   }
-  return quitbool;
+  return quitcheck;
 }
 
-const Login = () => {
-  let bool = false;
-  let quitbool = false;
+const loginfunc = () => {
+  let goOn = false;
+  let quitcheck = false;
   updateinterface();
-  while (bool === false) {
-    const obj = LoginLogin(quitbool, bool);
-    bool = obj.bool;
-    quitbool = obj.quitbool;
+  while (goOn === false) {
+    const obj = loginLogin(quitcheck, goOn);
+    goOn = obj.goOn;
+    quitcheck = obj.quitcheck;
   }
-  bool = false;
-  if (quitbool === false) {
-    quitbool = LoginPassword(quitbool, bool);
+  goOn = false;
+  quitcheck = false;
+  if (quitcheck === false) {
+    quitcheck = loginPassword(quitcheck, goOn);
   }
-  return quitbool;
+  return quitcheck;
 };
 
-function DocumentCreate(dir) {
+function documentCreate(dir) {
   updateinterface();
-  // fs.chmodSync(dir,300);
   box(10, 28, 4, 25);
   pos(11, 30);
   const name = readline.question('File Name: ');
@@ -234,7 +238,7 @@ function DocumentCreate(dir) {
   }
 }
 
-function DocumentOpen(dir) {
+function documentOpen(dir) {
   updateinterface();
   box(10, 28, 4, 25);
   pos(11, 30);
@@ -261,7 +265,7 @@ function DocumentOpen(dir) {
   }
 }
 
-function DocumentDelete(dir) {
+function documentDelete(dir) {
   updateinterface();
   box(10, 28, 4, 25);
   pos(11, 30);
@@ -281,7 +285,7 @@ function DocumentDelete(dir) {
   }
 }
 
-function DocumentList(dir) {
+function documentList(dir) {
   clear();
   let i = 1;
   fs.readdirSync(dir).forEach(file => {
@@ -294,24 +298,24 @@ function DocumentList(dir) {
   if (quit === 'q') documentMenu();
 }
 
-const Document = () => {
-  let bool = true;
+const document = () => {
+  let goOn = true;
   documentMenu();
-  while (bool === true) {
+  while (goOn === true) {
     pos(18, 37);
     const dir = `./${gdir}/${glogin}`;
     if (!fs.existsSync(dir)) fs.mkdirSync(dir);
     const answer = readline.question('');
     if (answer === '1') {
-      DocumentCreate(dir);
+      documentCreate(dir);
     } else if (answer === '2') {
-      DocumentOpen(dir);
+      documentOpen(dir);
     } else if (answer === '3') {
-      DocumentDelete(dir);
+      documentDelete(dir);
     } else if (answer === 'l') {
-      DocumentList(dir);
+      documentList(dir);
     } else if (answer === 'q') {
-      bool = false;
+      goOn = false;
       mainMenu();
     }
   }
@@ -327,15 +331,15 @@ module.exports = {
   mainMenu,
   box,
   updateinterface,
-  RegisterLogin,
-  RegisterPassword,
-  Register,
-  LoginLogin,
-  LoginPassword,
-  Login,
-  DocumentCreate,
-  DocumentOpen,
-  DocumentDelete,
-  DocumentList,
-  Document,
+  registerLogin,
+  registerPassword,
+  register,
+  loginLogin,
+  loginPassword,
+  loginfunc,
+  documentCreate,
+  documentOpen,
+  documentDelete,
+  documentList,
+  document,
 };
